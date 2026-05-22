@@ -54,19 +54,19 @@ public abstract class AbstractReferenceFeederConfigurationWizard
     private final ReferenceFeeder feeder;
     private final boolean includePickLocation;
 
-    private JPanel panelLocation;
+    protected JPanel panelLocation;
     private JLabel lblX_1;
     private JLabel lblY_1;
     private JLabel lblZ;
     private JLabel lblRotation;
-    private JTextField textFieldLocationX;
-    private JTextField textFieldLocationY;
-    private JTextField textFieldLocationZ;
-    private JTextField textFieldLocationC;
+    protected JTextField textFieldLocationX;
+    protected JTextField textFieldLocationY;
+    protected JTextField textFieldLocationZ;
+    protected JTextField textFieldLocationC;
     private JPanel panelPart;
 
     private JComboBox comboBoxPart;
-    private LocationButtonsPanel locationButtonsPanel;
+    protected JPanel locationButtonsPanel;
     private JTextField feedRetryCount;
     private JLabel lblPickRetryCount;
     private JTextField pickRetryCount;
@@ -184,8 +184,13 @@ public abstract class AbstractReferenceFeederConfigurationWizard
             panelLocation.add(textFieldLocationC, "8, 4");
             textFieldLocationC.setColumns(8);
 
-            locationButtonsPanel = new LocationButtonsPanel(textFieldLocationX, textFieldLocationY,
-                    textFieldLocationZ, textFieldLocationC);
+            //if(this.getClass().getSimpleName().equals("FreeSlotFeederConfigurationWizard")){
+            //    FreeSlotFeeder ffeeder = (FreeSlotFeeder) feeder;
+            //    locationButtonsPanel = new FreeSlotLocationButtonPanel(textFieldLocationX, textFieldLocationY, textFieldLocationZ, textFieldLocationC, ffeeder);
+            //}
+            //else{
+                locationButtonsPanel = new LocationButtonsPanel(textFieldLocationX, textFieldLocationY, textFieldLocationZ, textFieldLocationC);
+            //}
             panelLocation.add(locationButtonsPanel, "10, 4");
         }
     }

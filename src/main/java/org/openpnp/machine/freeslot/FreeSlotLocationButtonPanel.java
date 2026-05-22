@@ -1,23 +1,5 @@
-/*
- * Copyright (C) 2011 Jason von Nieda <jason@vonnieda.org>
- *
- * This file is part of OpenPnP.
- *
- * OpenPnP is free software: you can redistribute it and/or modify it under the terms of the GNU
- * General Public License as published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * OpenPnP is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with OpenPnP. If not, see
- * <http://www.gnu.org/licenses/>.
- *
- * For more information about OpenPnP visit http://openpnp.org
- */
 
-package org.openpnp.gui.components;
+package org.openpnp.machine.freeslot;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -51,16 +33,20 @@ import org.openpnp.util.MovableUtils;
 import org.openpnp.util.UiUtils;
 
 /**
- * A JPanel of 4 small buttons that assist in setting locations. The buttons are Capture Camera
- * Coordinates, Capture Tool Coordinates, Move Camera to Coordinates and Move Tool to Coordinates.
- * If the actuatorId property is set, this causes the component to use the specified Actuator in
+ * A JPanel of 4 small buttons that assist in setting locations. The buttons are
+ * Capture Camera
+ * Coordinates, Capture Tool Coordinates, Move Camera to Coordinates and Move
+ * Tool to Coordinates.
+ * If the actuatorId property is set, this causes the component to use the
+ * specified Actuator in
  * place of the tool.
  */
 @SuppressWarnings("serial")
-public class LocationButtonsPanel extends JPanel {
+public class FreeSlotLocationButtonPanel extends JPanel {
     private JTextField textFieldX, textFieldY, textFieldZ, textFieldC;
     private String actuatorName;
-    private HeadMountable tool;     // this variable holds a spcific tool, if the tool-buttons shall react on that tool only, default is the selected nozzle
+    private HeadMountable tool; // this variable holds a spcific tool, if the tool-buttons shall react on that
+                                // tool only, default is the selected nozzle
 
     private JButton buttonCenterTool;
     private JButton buttonCaptureCamera;
@@ -74,8 +60,10 @@ public class LocationButtonsPanel extends JPanel {
     private boolean baseLocationVectorial;
     private boolean contactProbeReference;
 
-    public LocationButtonsPanel(JTextField textFieldX, JTextField textFieldY, JTextField textFieldZ,
-            JTextField textFieldC) {
+    private FreeSlotFeeder feeder;
+
+    public FreeSlotLocationButtonPanel(JTextField textFieldX, JTextField textFieldY, JTextField textFieldZ,
+            JTextField textFieldC, FreeSlotFeeder feeder) {
         FlowLayout flowLayout = (FlowLayout) getLayout();
         flowLayout.setVgap(0);
         flowLayout.setHgap(2);
@@ -83,6 +71,7 @@ public class LocationButtonsPanel extends JPanel {
         this.textFieldY = textFieldY;
         this.textFieldZ = textFieldZ;
         this.textFieldC = textFieldC;
+        this.feeder = feeder;
 
         buttonCenterCamera = new JButton(positionCameraAction);
         buttonCenterCamera.setHideActionText(true);
@@ -143,8 +132,7 @@ public class LocationButtonsPanel extends JPanel {
     public void setShowCameraButtons(boolean shown) {
         if (shown) {
             // not implemented
-        }
-        else {
+        } else {
             remove(buttonCenterCamera);
             remove(buttonCaptureCamera);
             remove(separator);
@@ -155,8 +143,7 @@ public class LocationButtonsPanel extends JPanel {
     public void setShowToolButtons(boolean shown) {
         if (shown) {
             // not implemented
-        }
-        else {
+        } else {
             remove(buttonCenterTool);
             remove(buttonCenterToolNoSafeZ);
             remove(buttonContactProbeTool);
@@ -169,8 +156,7 @@ public class LocationButtonsPanel extends JPanel {
     public void setShowPositionToolNoSafeZ(boolean b) {
         if (b) {
             add(buttonCenterToolNoSafeZ, 2);
-        }
-        else {
+        } else {
             remove(buttonCenterToolNoSafeZ);
         }
     }
@@ -178,8 +164,7 @@ public class LocationButtonsPanel extends JPanel {
     public void setShowContactProbeTool(boolean b) {
         if (b) {
             add(buttonContactProbeTool, 2);
-        }
-        else {
+        } else {
             remove(buttonContactProbeTool);
         }
     }
@@ -198,8 +183,7 @@ public class LocationButtonsPanel extends JPanel {
             buttonCaptureTool.setAction(captureToolCoordinatesAction);
             buttonCenterTool.setAction(positionToolAction);
             buttonCenterToolNoSafeZ.setAction(positionToolNoSafeZAction);
-        }
-        else {
+        } else {
             buttonCaptureTool.setAction(captureActuatorCoordinatesAction);
             buttonCenterTool.setAction(positionActuatorAction);
             buttonCenterToolNoSafeZ.setAction(positionActuatorNoSafeZAction);
@@ -210,11 +194,12 @@ public class LocationButtonsPanel extends JPanel {
         return actuatorName;
     }
 
-    // set/specify a tool the tool/nozzle buttons shall react on. Default is the selected nozzle
+    // set/specify a tool the tool/nozzle buttons shall react on. Default is the
+    // selected nozzle
     public void setTool(HeadMountable tool) {
         this.tool = tool;
     }
-    
+
     public HeadMountable getTool() throws Exception {
         // return the specified tool, if any
         if (tool != null) {
@@ -230,7 +215,8 @@ public class LocationButtonsPanel extends JPanel {
     }
 
     /**
-     * Get the Actuator with the name provided by setActuatorName() that is on the same Head as the
+     * Get the Actuator with the name provided by setActuatorName() that is on the
+     * same Head as the
      * tool from getTool().
      *
      * @return
@@ -252,142 +238,145 @@ public class LocationButtonsPanel extends JPanel {
 
     protected Location getParsedLocation() {
         double x = 0, y = 0, z = 0, rotation = 0;
-        if (textFieldX != null && ! textFieldX.getText().isEmpty()) {
+        if (textFieldX != null && !textFieldX.getText().isEmpty()) {
             x = Length.parse(textFieldX.getText()).getValue();
         }
-        if (textFieldY != null && ! textFieldY.getText().isEmpty()) {
+        if (textFieldY != null && !textFieldY.getText().isEmpty()) {
             y = Length.parse(textFieldY.getText()).getValue();
         }
-        if (textFieldZ != null && ! textFieldZ.getText().isEmpty()) {
+        if (textFieldZ != null && !textFieldZ.getText().isEmpty()) {
             z = Length.parse(textFieldZ.getText()).getValue();
         }
-        if (textFieldC != null && ! textFieldC.getText().isEmpty()) {
+        if (textFieldC != null && !textFieldC.getText().isEmpty()) {
             rotation = Double.parseDouble(textFieldC.getText());
         }
+        //x += feeder.getWidthX() * (feeder.getSlotX() - 1);
+        //y -= feeder.getWidthY() * (feeder.getSlotY() - 1);
         return new Location(Configuration.get().getSystemUnits(), x, y, z, rotation);
     }
 
-    private Action captureCameraCoordinatesAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.CaptureCameraCoordinates"), //$NON-NLS-1$
-                    Icons.captureCamera) {
-                {
-                    putValue(Action.SHORT_DESCRIPTION,Translations.getString(
-                            "LocalButtonsPanel.Action.CaptureCameraCoordinates.Description")); //$NON-NLS-1$
-                }
+    private Action captureCameraCoordinatesAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.CaptureCameraCoordinates"), //$NON-NLS-1$
+            Icons.captureCamera) {
+        {
+            putValue(Action.SHORT_DESCRIPTION, Translations.getString(
+                    "LocalButtonsPanel.Action.CaptureCameraCoordinates.Description")); //$NON-NLS-1$
+        }
 
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    UiUtils.submitUiMachineTask(() -> {
-                        Location l = getCamera().getLocation();
-                        Location lz = Cycles.zProbe(l);
-                        if (lz != null) {
-                            l = lz;
-                        }
-                        if (baseLocation != null) {
-                            l = l.subtractWithRotation(baseLocation);
-                            if (!isBaseLocationVectorial()) {
-                                l = l.rotateXy(-baseLocation.getRotation());
-                            }
-                        }
-                        final Location lf = l;
-                        SwingUtilities.invokeAndWait(() -> {
-                            Helpers.copyLocationIntoTextFields(lf,
-                                    textFieldX,
-                                    textFieldY,
-                                    lz == null ? null : textFieldZ,
-                                    textFieldC);
-                        });
-                    });
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            UiUtils.submitUiMachineTask(() -> {
+                Location l = getCamera().getLocation();
+                Location lz = Cycles.zProbe(l);
+                if (lz != null) {
+                    l = lz;
                 }
-            };
-
-    private Action captureToolCoordinatesAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.CaptureToolCoordinates"), //$NON-NLS-1$
-                    Icons.captureTool) {
-                {
-                    putValue(Action.SHORT_DESCRIPTION, Translations.getString(
-                            "LocalButtonsPanel.Action.CaptureToolCoordinates.Description")); //$NON-NLS-1$
+                if (baseLocation != null) {
+                    l = l.subtractWithRotation(baseLocation);
+                    if (!isBaseLocationVectorial()) {
+                        l = l.rotateXy(-baseLocation.getRotation());
+                    }
                 }
+                final Location lf = l;
+                SwingUtilities.invokeAndWait(() -> {
+                    Helpers.copyLocationIntoTextFields(lf,
+                            textFieldX,
+                            textFieldY,
+                            lz == null ? null : textFieldZ,
+                            textFieldC);
+                });
+            });
+        }
+    };
 
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    UiUtils.submitUiMachineTask(() -> {
-                        Location l = getTool().getLocation();
-                        if (baseLocation != null) {
-                            l = l.subtractWithRotation(baseLocation);
-                            if (!isBaseLocationVectorial()) {
-                                l = l.rotateXy(-baseLocation.getRotation());
-                            }
-                        }
-                        final Location lf = l;
-                        SwingUtilities.invokeAndWait(() -> {
-                            Helpers.copyLocationIntoTextFields(lf, textFieldX, textFieldY, textFieldZ,
-                                    textFieldC);
-                        });
-                    });
+    private Action captureToolCoordinatesAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.CaptureToolCoordinates"), //$NON-NLS-1$
+            Icons.captureTool) {
+        {
+            putValue(Action.SHORT_DESCRIPTION, Translations.getString(
+                    "LocalButtonsPanel.Action.CaptureToolCoordinates.Description")); //$NON-NLS-1$
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            UiUtils.submitUiMachineTask(() -> {
+                Location l = getTool().getLocation();
+                if (baseLocation != null) {
+                    l = l.subtractWithRotation(baseLocation);
+                    if (!isBaseLocationVectorial()) {
+                        l = l.rotateXy(-baseLocation.getRotation());
+                    }
                 }
-            };
+                final Location lf = l;
+                SwingUtilities.invokeAndWait(() -> {
+                    Helpers.copyLocationIntoTextFields(lf, textFieldX, textFieldY, textFieldZ,
+                            textFieldC);
+                });
+            });
+        }
+    };
 
-    private Action captureActuatorCoordinatesAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.CaptureActuatorCoordinates" //$NON-NLS-1$
+    private Action captureActuatorCoordinatesAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.CaptureActuatorCoordinates" //$NON-NLS-1$
             ), Icons.capturePin) {
-                {
-                    putValue(Action.SHORT_DESCRIPTION, Translations.getString(
-                            "LocalButtonsPanel.Action.CaptureActuatorCoordinates.Description")); //$NON-NLS-1$
+        {
+            putValue(Action.SHORT_DESCRIPTION, Translations.getString(
+                    "LocalButtonsPanel.Action.CaptureActuatorCoordinates.Description")); //$NON-NLS-1$
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            UiUtils.submitUiMachineTask(() -> {
+                Actuator actuator = getActuator();
+                if (actuator == null) {
+                    return;
                 }
-
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    UiUtils.submitUiMachineTask(() -> {
-                        Actuator actuator = getActuator();
-                        if (actuator == null) {
-                            return;
-                        }
-                        Location l = actuator.getLocation();
-                        if (baseLocation != null) {
-                            l = l.subtractWithRotation(baseLocation);
-                            if (!isBaseLocationVectorial()) {
-                                l = l.rotateXy(-baseLocation.getRotation());
-                            }
-                        }
-                        final Location lf = l;
-                        SwingUtilities.invokeAndWait(() -> {
-                            Helpers.copyLocationIntoTextFields(lf, textFieldX,
-                                    textFieldY, textFieldZ, textFieldC);
-                        });
-                    });
-
+                Location l = actuator.getLocation();
+                if (baseLocation != null) {
+                    l = l.subtractWithRotation(baseLocation);
+                    if (!isBaseLocationVectorial()) {
+                        l = l.rotateXy(-baseLocation.getRotation());
+                    }
                 }
-            };
+                final Location lf = l;
+                SwingUtilities.invokeAndWait(() -> {
+                    Helpers.copyLocationIntoTextFields(lf, textFieldX,
+                            textFieldY, textFieldZ, textFieldC);
+                });
+            });
 
-    protected Action positionCameraAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.PositionCamera"), //$NON-NLS-1$
-                    Icons.centerCamera) {
-                {
-                    putValue(Action.SHORT_DESCRIPTION, Translations.getString(
-                            "LocalButtonsPanel.Action.PositionCamera.Description")); //$NON-NLS-1$
+        }
+    };
+
+    protected Action positionCameraAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.PositionCamera"), //$NON-NLS-1$
+            Icons.centerCamera) {
+        {
+            putValue(Action.SHORT_DESCRIPTION, Translations.getString(
+                    "LocalButtonsPanel.Action.PositionCamera.Description")); //$NON-NLS-1$
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            UiUtils.submitUiMachineTask(() -> {
+                System.out.println("Position camera action triggered");
+                Camera camera = getCamera();
+                Location location = getParsedLocation();
+                if (baseLocation != null) {
+                    if (!isBaseLocationVectorial()) {
+                        location = location.rotateXy(baseLocation.getRotation());
+                    }
+                    location = location.addWithRotation(baseLocation);
                 }
+                MovableUtils.moveToLocationAtSafeZ(camera, location);
+                MovableUtils.fireTargetedUserAction(camera);
 
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    UiUtils.submitUiMachineTask(() -> {
-                        Camera camera = getCamera();
-                        Location location = getParsedLocation();
-                        if (baseLocation != null) {
-                            if (!isBaseLocationVectorial()) {
-                                location = location.rotateXy(baseLocation.getRotation());
-                            }
-                            location = location.addWithRotation(baseLocation);
-                        }
-                        MovableUtils.moveToLocationAtSafeZ(camera, location);
-                        MovableUtils.fireTargetedUserAction(camera);
-
-                        Map<String, Object> globals = new HashMap<>();
-                        globals.put("camera", camera);
-                        Configuration.get().getScripting().on("Camera.AfterPosition", globals);
-                    });
-                }
-            };
+                Map<String, Object> globals = new HashMap<>();
+                globals.put("camera", camera);
+                Configuration.get().getScripting().on("Camera.AfterPosition", globals);
+            });
+        }
+    };
 
     private Action positionToolAction = new AbstractAction(Translations.getString(
             "LocalButtonsPanel.Action.PositionTool"), Icons.centerTool) { //$NON-NLS-1$
@@ -413,9 +402,9 @@ public class LocationButtonsPanel extends JPanel {
         }
     };
 
-    private Action positionToolNoSafeZAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.PositionToolNoSafeZ"), //$NON-NLS-1$
-                    Icons.centerToolNoSafeZ) {
+    private Action positionToolNoSafeZAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.PositionToolNoSafeZ"), //$NON-NLS-1$
+            Icons.centerToolNoSafeZ) {
         {
             putValue(Action.SHORT_DESCRIPTION, Translations.getString(
                     "LocalButtonsPanel.Action.PositionToolNoSafeZ.Description")); //$NON-NLS-1$
@@ -438,12 +427,12 @@ public class LocationButtonsPanel extends JPanel {
         }
     };
 
-    private Action contactProbeNozzleAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.ContactProbeNozzle"), //$NON-NLS-1$
-                    Icons.contactProbeNozzle) {
+    private Action contactProbeNozzleAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.ContactProbeNozzle"), //$NON-NLS-1$
+            Icons.contactProbeNozzle) {
         {
             putValue(Action.SHORT_DESCRIPTION, Translations.getString(
-                            "LocalButtonsPanel.Action.ContactProbeNozzle.Description")); //$NON-NLS-1$
+                    "LocalButtonsPanel.Action.ContactProbeNozzle.Description")); //$NON-NLS-1$
         }
 
         @Override
@@ -453,11 +442,11 @@ public class LocationButtonsPanel extends JPanel {
                 /// Warn the user.
                 result = JOptionPane.showConfirmDialog(getTopLevelAncestor(),
                         "<html>This will overwrite the Z reference and therefore<br/>"
-                                +"change the meaning of previously captured Z coordinates.<br/>"
-                                +"<span color=\"red\">You will need to recapture these locations!</span>"
-                                +"<br/><br/>"
-                                +"Are you sure?</html>",
-                                null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                                + "change the meaning of previously captured Z coordinates.<br/>"
+                                + "<span color=\"red\">You will need to recapture these locations!</span>"
+                                + "<br/><br/>"
+                                + "Are you sure?</html>",
+                        null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             }
             if (result == JOptionPane.YES_OPTION) {
                 UiUtils.submitUiMachineTask(() -> {
@@ -466,10 +455,10 @@ public class LocationButtonsPanel extends JPanel {
                         // Always use the probing default nozzle for reference probing.
                         tool = ContactProbeNozzle.getDefaultNozzle();
                     }
-                    if (! (tool instanceof ContactProbeNozzle)) {
-                        throw new Exception("Nozzle "+tool.getName()+" is not a ContactProbeNozzle.");
+                    if (!(tool instanceof ContactProbeNozzle)) {
+                        throw new Exception("Nozzle " + tool.getName() + " is not a ContactProbeNozzle.");
                     }
-                    ContactProbeNozzle nozzle =  (ContactProbeNozzle)tool;
+                    ContactProbeNozzle nozzle = (ContactProbeNozzle) tool;
                     Location nominalLocation = getParsedLocation();
                     if (baseLocation != null) {
                         nominalLocation = nominalLocation.rotateXy(baseLocation.getRotation());
@@ -489,9 +478,9 @@ public class LocationButtonsPanel extends JPanel {
         }
     };
 
-    private Action positionActuatorAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.PositionActuator"), //$NON-NLS-1$
-                    Icons.centerPin) {
+    private Action positionActuatorAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.PositionActuator"), //$NON-NLS-1$
+            Icons.centerPin) {
         {
             putValue(Action.SHORT_DESCRIPTION, Translations.getString(
                     "LocalButtonsPanel.Action.PositionActuator.Description")); //$NON-NLS-1$
@@ -514,9 +503,9 @@ public class LocationButtonsPanel extends JPanel {
         }
     };
 
-    private Action positionActuatorNoSafeZAction =
-            new AbstractAction(Translations.getString("LocalButtonsPanel.Action.PositionActuatorNoSafeZ"), //$NON-NLS-1$
-                    Icons.centerPinNoSafeZ) {
+    private Action positionActuatorNoSafeZAction = new AbstractAction(
+            Translations.getString("LocalButtonsPanel.Action.PositionActuatorNoSafeZ"), //$NON-NLS-1$
+            Icons.centerPinNoSafeZ) {
         {
             putValue(Action.SHORT_DESCRIPTION, Translations.getString(
                     "LocalButtonsPanel.Action.PositionActuatorNoSafeZ.Description")); //$NON-NLS-1$

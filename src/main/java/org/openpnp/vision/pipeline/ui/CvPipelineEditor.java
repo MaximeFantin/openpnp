@@ -80,6 +80,7 @@ import org.openpnp.vision.pipeline.stages.SetColor;
 import org.openpnp.vision.pipeline.stages.SimpleBlobDetector;
 import org.openpnp.vision.pipeline.stages.SimpleOcr;
 import org.openpnp.vision.pipeline.stages.SizeCheck;
+import org.openpnp.vision.pipeline.stages.SlotLight;
 import org.openpnp.vision.pipeline.stages.Threshold;
 import org.openpnp.vision.pipeline.stages.ThresholdAdaptive;
 import org.openpnp.vision.pipeline.stages.WritePartTemplateImage;
@@ -172,6 +173,7 @@ public class CvPipelineEditor extends JPanel {
         registerStageClass(AffineWarp.class);
         registerStageClass(AffineUnwarp.class);
         registerStageClass(SimpleOcr.class);
+        registerStageClass(SlotLight.class);
         
     }
 

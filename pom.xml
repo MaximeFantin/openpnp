@@ -249,6 +249,7 @@
 	</dependencies>
 	<build>
 		<plugins>
+
 			<!-- Used to specify that the Maven Eclipse task should download sources
 				and JavaDocs and attach them to the Eclipse project. -->
 			<plugin>

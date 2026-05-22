@@ -32,6 +32,7 @@ import org.openpnp.ConfigurationListener;
 import org.openpnp.Translations;
 import org.openpnp.gui.support.PropertySheetWizardAdapter;
 import org.openpnp.gui.support.Wizard;
+import org.openpnp.machine.freeslot.FreeSlotFeeder;
 import org.openpnp.machine.neoden4.NeoDen4Driver;
 import org.openpnp.machine.neoden4.NeoDen4FeederActuator;
 import org.openpnp.machine.neoden4.Neoden4Camera;
@@ -452,6 +453,9 @@ public class ReferenceMachine extends AbstractMachine {
         l.add(Neoden4Feeder.class);
         l.add(PhotonFeeder.class);
         l.add(BambooFeederAutoVision.class);
+
+        l.add(FreeSlotFeeder.class);
+
         l.addAll(registeredFeederClasses);
         return l;
     }

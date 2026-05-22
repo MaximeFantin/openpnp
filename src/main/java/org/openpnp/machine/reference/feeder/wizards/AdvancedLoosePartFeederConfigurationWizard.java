@@ -110,10 +110,11 @@ public class AdvancedLoosePartFeederConfigurationWizard
         CvPipeline pipeline = feeder.getPipeline();
         pipeline.setProperty("camera", Configuration.get().getMachine().getDefaultHead().getDefaultCamera());
         pipeline.setProperty("feeder", feeder);
+        pipeline.setFeeder(feeder);
         CvPipelineEditor editor = new CvPipelineEditor(pipeline);
         JDialog dialog = new CvPipelineEditorDialog(MainFrame.get(), feeder.getPart().getId() + " Pipeline", editor);
         dialog.setVisible(true);
-}
+    }
 
     private void resetPipeline() {
         feeder.resetPipeline();

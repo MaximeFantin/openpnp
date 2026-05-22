@@ -16,6 +16,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.openpnp.spi.base.AbstractFeeder;
 import org.openpnp.vision.FluentCv.ColorSpace;
 import org.openpnp.vision.pipeline.CvStage.Result;
 import org.pmw.tinylog.Logger;
@@ -73,6 +74,8 @@ public class CvPipeline implements AutoCloseable {
 
     private int currentShot;
 
+    private AbstractFeeder feeder;
+
     public CvPipeline() {
         
     }
@@ -84,6 +87,18 @@ public class CvPipeline implements AutoCloseable {
         catch (Exception e) {
             throw new Error(e);
         }
+    }
+
+    public CvPipeline(AbstractFeeder feeder) {
+        this.feeder = feeder;
+    }
+
+    public AbstractFeeder getFeeder() {
+        return feeder;
+    }
+
+    public void setFeeder(AbstractFeeder feeder) {
+        this.feeder = feeder;
     }
 
     /**
