@@ -71,6 +71,7 @@ import org.openpnp.vision.pipeline.stages.Normalize;
 import org.openpnp.vision.pipeline.stages.OrientRotatedRects;
 import org.openpnp.vision.pipeline.stages.ParameterBool;
 import org.openpnp.vision.pipeline.stages.ParameterNumeric;
+import org.openpnp.vision.pipeline.stages.PhotonSlotLight;
 import org.openpnp.vision.pipeline.stages.ReadModelProperty;
 import org.openpnp.vision.pipeline.stages.ReadPartTemplateImage;
 import org.openpnp.vision.pipeline.stages.Rotate;
@@ -80,7 +81,6 @@ import org.openpnp.vision.pipeline.stages.SetColor;
 import org.openpnp.vision.pipeline.stages.SimpleBlobDetector;
 import org.openpnp.vision.pipeline.stages.SimpleOcr;
 import org.openpnp.vision.pipeline.stages.SizeCheck;
-import org.openpnp.vision.pipeline.stages.SlotLight;
 import org.openpnp.vision.pipeline.stages.Threshold;
 import org.openpnp.vision.pipeline.stages.ThresholdAdaptive;
 import org.openpnp.vision.pipeline.stages.WritePartTemplateImage;
@@ -173,7 +173,7 @@ public class CvPipelineEditor extends JPanel {
         registerStageClass(AffineWarp.class);
         registerStageClass(AffineUnwarp.class);
         registerStageClass(SimpleOcr.class);
-        registerStageClass(SlotLight.class);
+        registerStageClass(PhotonSlotLight.class);
         
     }
 
