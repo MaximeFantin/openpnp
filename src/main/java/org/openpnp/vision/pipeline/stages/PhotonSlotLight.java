@@ -87,7 +87,6 @@ public class PhotonSlotLight extends CvStage{
     @Override
     public Result process(CvPipeline pipeline) throws Exception{
         if(lit){
-            System.out.println("Check 1");
             if(allSlots){
                 setLight(address, 0x0F, 0x0F, color);
             }
@@ -123,7 +122,6 @@ public class PhotonSlotLight extends CvStage{
         // ? 55 00 00 06 34 10 22 0F FF FF FF
         UiUtils.submitUiMachineTask(() -> {
             PhotonBusInterface bus = getBus();
-            System.out.println("Check bus: " + bus);
             PacketBuilder packet = PacketBuilder.command(commandId, toAddress);
             for(int dataByte : data){
                 packet.putByte(dataByte);
