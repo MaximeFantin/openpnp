@@ -95,7 +95,7 @@ public class PhotonSlotLight extends CvStage{
             }
         }
         else{
-            unlit(address, slotX, slotY);
+            unlit(address);
         }
 
         return null;
@@ -108,7 +108,7 @@ public class PhotonSlotLight extends CvStage{
         sendCommand(0x10, address, data);
     }
     
-    private static void unlit(int address, int x, int y){
+    private static void unlit(int address){
         int[] data = {0xFF, 0x00, 0x00, 0x00, 0x00};
         sendCommand(0x10, address, data);
     }
